@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Assignment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+    <div class="flex">
+
+        <!-- Sidebar -->
+        <%- include("partials/navBar", { activePage: "dashboard" }) %>
+
+            <!-- MAIN CONTENT -->
+            <main class="flex-1 p-10">
+
+                <h2 class="text-3xl font-bold text-gray-800 mb-8">Review Assignment</h2>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+
+                    <!-- TOP DETAILS -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+
+                        <div class="p-4 bg-gray-50 rounded border">
+                            <p class="text-xs text-gray-500">STUDENT NAME</p>
+                            <h3 class="text-lg font-medium">
+                                <%= student.name %>
+                            </h3>
+                        </div>
+
+                        <div class="p-4 bg-gray-50 rounded border">
+                            <p class="text-xs text-gray-500">ASSIGNMENT TITLE</p>
+                            <h3 class="text-lg font-medium">
+                                <%= assignment.title %>
+                            </h3>
+                        </div>
+
+                        <div class="p-4 bg-gray-50 rounded border">
+                            <p class="text-xs text-gray-500">STATUS</p>
+                            <span class="px-3 py-1 text-white text-sm rounded
+                        <%= assignment.status=='Submitted'?'bg-blue-600':
+                            assignment.status=='Approved'?'bg-green-600':'bg-red-600' %>">
+                                <%= assignment.status %>
+                            </span>
+                        </div>
+
+                        <div class="p-4 bg-gray-50 rounded border">
+                            <p class="text-xs text-gray-500">SUBMITTED ON</p>
+                            <h3 class="text-lg font-medium">
+                                <%= assignment.submittedAt ? new Date(assignment.submittedAt).toLocaleDateString() : "-"
+                                    %>
+                            </h3>
+                        </div>
+
+                    </div>
+
+
+                    <!-- TWO COLUMN LAYOUT -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+                        <!-- LEFT Description -->
+                        <div>
+                            <h3 class="font-semibold text-gray-700 mb-2">DESCRIPTION</h3>
+                            <p class="p-4 bg-gray-50 border rounded text-gray-700">
+                                <%= assignment.description %>
+                            </p>
+
+                            <div class="mt-6 text-gray-700 space-y-2">
+                                <p><b>COURSE:</b>
+                                    <%= student.departement %>
+                                </p>
+
+                                <p><b>FILE:</b></p>
+
+                               <% if (Array.isArray(assignment.filename) && assignment.filename.length > 0) { %>
+
+    <div class="space-y-4">
+        <% assignment.filename.forEach((file, index) => { %>
+        
+        <div class="flex items-center justify-between bg-gray-50 border rounded-xl p-4 shadow-sm">
+
+            <!-- LEFT — PDF ICON + NAME -->
+            <div class="flex items-center gap-3">
+
+                <!-- Simple PDF Logo -->
+                <div class="w-10 h-12 bg-gray-200 rounded-md relative flex items-center justify-center">
+                    <span class="absolute bottom-0 left-0 right-0 bg-red-600 text-white text-[10px] 
+                                 font-bold px-1 py-[2px] text-center rounded-sm">
+                        PDF
+                    </span>
+                </div>
+
+                <p class="font-medium text-gray-700"> <%= file %> </p>
+            </div>
+
+            <!-- RIGHT — Only Download Button -->
+            <a href="<%= assignment.download_url[index] %>" target="_blank"
+               class="bg-green-600 text-white text-sm px-5 py-1.5 rounded-full hover:bg-green-700">
+                Download
+            </a>
+
+        </div>
+
+        <% }) %>
+    </div>
+
+<% } else { %>
+    <p class="text-gray-500 italic">No Files Available</p>
+<% } %>
+
+
+                            </div>
+                        </div>
+
+
+                        <!-- RIGHT — Preview + Remarks + Buttons -->
+                        <div>
+
+                            <h3 class="font-semibold text-gray-700 mb-2">Assignment File Preview:</h3>
+
+                            <div
+                                class="w-full h-[250px] md:h-[300px] border rounded-md overflow-hidden shadow-sm hover:shadow-lg transition-all bg-gray-100 flex items-center justify-center">
+                                <iframe src="<%- assignment.preview_url[0] %>" class="w-full h-full rounded-md"
+                                    title="Assignment Preview">
+                                </iframe>
+                            </div>
+
+
+
+
+                            <!-- FORM UNDER PREVIEW -->
+                            <form action="/review/submit" method="POST" enctype="multipart/form-data">
+
+                                <label class="font-semibold text-gray-700">REMARKS:</label>
+                                <textarea name="remarks" class="w-full border rounded p-3 mt-2 mb-4"
+                                    placeholder="Enter remarks for student..."></textarea>
+
+                                <label class="font-semibold text-gray-700 block">UPLOAD SIGNATURE(S):</label>
+                                <input type="file" name="signature" multiple class="border p-2 rounded mt-1 mb-2"
+                                    onchange="showFiles(this)">
+
+                                <!-- Show selected files -->
+                                <ul id="fileList" class="text-xs text-gray-600 mb-6"></ul>
+
+                                <div class="flex gap-3">
+                                    <button type="submit" name="action" value="approve"
+                                        class="flex-1 bg-green-600 text-white py-2 rounded hover:bg-green-700">
+                                        ✔ Approve Assignment
+                                    </button>
+
+                                    <button type="submit" name="action" value="reject"
+                                        class="flex-1 bg-red-600 text-white py-2 rounded hover:bg-red-700">
+                                        ✘ Reject Assignment
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+
+            </main>
+    </div>
+
+
+    <script>
+        function showFiles(input) {
+            let list = document.getElementById("fileList");
+            list.innerHTML = "";
+            [...input.files].forEach(f => {
+                list.innerHTML += `<li>📄 ${f.name}</li>`;
+            });
+        }
+    </script>
+
+</body>
+
+</html>

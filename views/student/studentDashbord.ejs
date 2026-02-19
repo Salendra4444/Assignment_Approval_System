@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Dashboard</title>
+
+    <!-- TailwindCSS CDN (easy & matches design style) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="flex">
+
+        <!-- Sidebar Partial -->
+        <%- include("partials/navBar") %>
+
+            <% let Draft=0; let Approved=0; let Submitted=0; let Rejected=0 ; let i=5; data.forEach(item=> {
+                if (item._id === 'Draft') Draft = item.countAssignments;
+                if (item._id === 'Approved') Approved = item.countAssignments;
+                if (item._id === 'Submitted') Submitted = item.countAssignments;
+                if (item._id === 'Rejected') Rejected = item.countAssignments;
+                });
+                %>
+
+                <!-- Main Content -->
+                <main class="flex-1 p-10">
+
+                    <h1 class="text-2xl font-semibold mb-6">Assignment Dashboard</h1>
+
+                    <!-- Stats Boxes -->
+                    <div class="grid grid-cols-4 gap-5 mb-10">
+
+                        <div class="bg-blue-100 p-6 rounded-xl shadow">
+                            <p class="text-gray-600 text-sm">Draft</p>
+                            <p class="text-3xl font-bold">
+                                <%= Draft %>
+                            </p>
+                        </div>
+
+                        <div class="bg-green-100 p-6 rounded-xl shadow">
+                            <p class="text-gray-600 text-sm">Submitted</p>
+                            <p class="text-3xl font-bold">
+                                <%= Submitted %>
+                            </p>
+                        </div>
+
+                        <div class="bg-yellow-100 p-6 rounded-xl shadow">
+                            <p class="text-gray-600 text-sm">Approved</p>
+                            <p class="text-3xl font-bold">
+                                <%= Approved %>
+                            </p>
+                        </div>
+
+                        <div class="bg-red-100 p-6 rounded-xl shadow">
+                            <p class="text-gray-600 text-sm">Rejected</p>
+                            <p class="text-3xl font-bold">
+                                <%= Rejected %>
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Recent Submissions -->
+                    <div class="bg-white p-6 rounded-xl shadow">
+
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-semibold">Recent Submissions</h2>
+
+                            <div class="flex gap-3">
+                                <!-- Bulk Upload Button -->
+                                <a href="/bulk-upload"
+                                    class="bg-purple-700 text-white px-4 py-2 rounded-lg hover:bg-purple-800">
+                                    Bulk Upload
+                                </a>
+
+                                <!-- Single Upload Button -->
+                                <a href="/single-upload"
+                                    class="bg-emerald-700 text-white px-4 py-2 rounded-lg hover:bg-emerald-800">
+                                    Upload New Assignment
+                                </a>
+                            </div>
+                        </div>
+
+                        <ul>
+                            <% assignments.forEach(assignment=> { %>
+                                <li class="flex justify-between py-3 border-b">
+
+                                    <div class="flex justify-between w-full items-center">
+
+                                        <!-- Assignment Title -->
+                                        <span>Assignment <%= i %> – <%= assignment.title %></span>
+
+                                        <!-- IF STATUS = DRAFT → SHOW BUTTON -->
+                                        <% if (assignment.status==='Draft' || assignment.status==='Rejected' ) { %>
+
+                                            <a href="/submitReview/<%= assignment._id %>"
+                                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                                <% if (assignment.status==='Rejected' ) { %>
+                                                    Resubmit for Review
+                                                    <% } else { %>
+                                                        Submit for Review
+                                                        <% } %>
+                                            </a>
+
+                                            <% } else { %>
+
+
+                                                <!-- OTHERWISE SHOW STATUS BADGE -->
+                                                <% let badgeClass="" ; %>
+
+                                                    <% if (assignment.status==="Submitted" ) { %>
+                                                        <% badgeClass="bg-orange-200 text-orange-700" ; %>
+                                                            <% } else if (assignment.status==="Approved" ) { %>
+                                                                <% badgeClass="bg-green-200 text-green-700" ; %>
+                                                                    <% } else if (assignment.status==="Rejected" ) { %>
+                                                                        <% badgeClass="bg-red-200 text-red-700" ; %>
+                                                                            <% } else if (assignment.status==="Draft" )
+                                                                                { %>
+                                                                                <% badgeClass="bg-blue-200 text-blue-700"
+                                                                                    ; %>
+                                                                                    <% } %>
+
+                                                                                        <span
+                                                                                            class="px-3 py-1 rounded-lg mr-4 <%= badgeClass %>">
+                                                                                            <%= assignment.status %>
+                                                                                        </span>
+
+
+                                                                                        <% } %>
+
+                                    </div>
+
+                                </li>
+
+                                <% i--; %>
+                                    <% }); %>
+                        </ul>
+
+
+
+                        <a href="/allAssignments" class="block text-blue-600 mt-4">View All Assignments →</a>
+
+                    </div>
+
+                </main>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!-- views/partials/sidebar.ejs -->
+
+<aside class="w-64 bg-white min-h-screen shadow-md p-6 border-r flex flex-col">
+
+    <h2 class="text-gray-500 text-xs tracking-wide mb-4 font-semibold">
+        NAVIGATION
+    </h2>
+
+    <nav class="flex flex-col gap-2">
+
+        <!-- Dashboard -->
+        <a href="/studentDashboard"
+           class="p-3 rounded-md transition-all font-medium
+                  hover:bg-emerald-600 hover:text-white
+                  <% if(activePage === 'dashboard') { %>
+                      bg-emerald-600 text-white
+                  <% } else { %>
+                      text-gray-700 bg-gray-100
+                  <% } %>">
+            Dashboard
+        </a>
+
+        <!-- Assignments -->
+        <a href="/allAssignments"
+           class="p-3 rounded-md transition-all font-medium
+                  hover:bg-emerald-600 hover:text-white
+                  <% if(activePage === 'assignments') { %>
+                      bg-emerald-600 text-white
+                  <% } else { %>
+                      text-gray-700 bg-gray-100
+                  <% } %>">
+            All Assignments
+        </a>
+
+        <!-- Profile -->
+        <a href="/studentProfile"
+           class="p-3 rounded-md transition-all font-medium
+                  hover:bg-emerald-600 hover:text-white
+                  <% if(activePage === 'profile') { %>
+                      bg-emerald-600 text-white
+                  <% } else { %>
+                      text-gray-700 bg-gray-100
+                  <% } %>">
+            Profile
+        </a>
+
+        <!-- Logout -->
+        <a href="/logout"
+           class="p-3 rounded-md transition-all font-medium
+                  hover:bg-red-600 hover:text-white
+                  <% if(activePage === 'logout') { %>
+                      bg-red-600 text-white
+                  <% } else { %>
+                      text-gray-700 bg-gray-100
+                  <% } %>">
+            Logout
+        </a>
+
+    </nav>
+</aside>

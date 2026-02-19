@@ -1,0 +1,41 @@
+<div class="flex min-h-screen bg-gray-100">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-white shadow-xl p-6 flex flex-col justify-between">
+
+        <!-- TOP -->
+        <div>
+            <h2 class="text-2xl font-bold mb-10 text-gray-800">Navigation</h2>
+
+            <nav class="space-y-3">
+
+                <a href="/professorDashboard"
+                   class="block px-4 py-2 rounded-lg
+                   <%= activePage === 'dashboard' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-100' %>">
+                    Dashboard
+                </a>
+
+                <a href="/professor/myReview"
+                   class="block px-4 py-2 rounded-lg
+                   <%= activePage === 'reviews' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-100' %>">
+                    My Reviews
+                </a>
+
+                <a href="/professor/profile"
+                   class="block px-4 py-2 rounded-lg
+                   <%= activePage === 'profile' ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-100' %>">
+                    Profile
+                </a>
+
+                <!-- LOGOUT INCLUDED AS 4th MENU ITEM -->
+                <a href="/logout"
+                   class="block px-4 py-2 rounded-lg bg-red-500 text-white text-center hover:bg-red-600">
+                    Logout
+                </a>
+
+            </nav>
+        </div>
+
+    </aside>
+
+</div>

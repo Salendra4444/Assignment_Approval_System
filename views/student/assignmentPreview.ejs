@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Preview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="flex min-h-screen">
+
+        <!-- Sidebar -->
+        <%- include("partials/navBar", { activePage: "assignments" }) %>
+
+        
+        <!-- MAIN -->
+        <main class="flex-1 p-10">
+
+            <!-- Header -->
+            <h1 class="text-3xl font-bold tracking-wide mb-8">📄 Assignment Preview</h1>
+
+            <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-8 space-y-6 transition hover:shadow-xl">
+
+                <!-- Title -->
+                <section>
+                    <h2 class="text-lg font-semibold text-gray-800">Title</h2>
+                    <p class="text-gray-700 text-base mt-1"><%= assignment.title %></p>
+                </section>
+
+                <!-- Description -->
+                <section>
+                    <h2 class="text-lg font-semibold text-gray-800">Description</h2>
+                    <p class="text-gray-700 whitespace-pre-line text-sm bg-gray-50 p-3 rounded-md leading-relaxed mt-1 border">
+                        <%= assignment.description %>
+                    </p>
+                </section>
+
+                <!-- Category + Status Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Category -->
+                    <section>
+                        <h2 class="text-lg font-semibold text-gray-800">Category</h2>
+                        <p class="mt-1 bg-emerald-50 inline-block px-3 py-1 rounded-lg text-emerald-700 font-medium capitalize border border-emerald-200">
+                            <%= assignment.category %>
+                        </p>
+                    </section>
+
+                    <!-- Status with dynamic pill -->
+                    <section>
+                        <h2 class="text-lg font-semibold text-gray-800">Status</h2>
+
+                        <% let color="bg-gray-500"; 
+                           if(assignment.status==="Draft") color="bg-yellow-500";
+                           if(assignment.status==="Submitted") color="bg-orange-500";
+                           if(assignment.status==="Approved") color="bg-green-600";
+                           if(assignment.status==="Rejected") color="bg-red-600";
+                        %>
+
+                        <span class="px-4 py-1 mt-1 inline-block rounded-full text-white text-sm font-semibold <%= color %> shadow">
+                            <%= assignment.status %>
+                        </span>
+                    </section>
+
+                </div>
+
+                <!-- Reviewer -->
+                <section>
+                    <h2 class="text-lg font-semibold text-gray-800 mb-1">Current Reviewer</h2>
+                    <p class="px-3 py-1 inline-block bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg font-medium">
+                        <%= assignment.currentReviewer || "Not Assigned Yet" %>
+                    </p>
+                </section>
+
+                <!-- Submit | Resubmit -->
+                <section class="pt-3 border-t">
+                    <% if (assignment.status === "Draft") { %>
+                        <a href="/submitReview/<%= assignment._id %>"
+                           class="inline-block bg-blue-600 px-6 py-3 rounded-lg text-white font-semibold hover:bg-blue-700 transition">
+                           🚀 Submit for Review
+                        </a>
+                    <% } else if (assignment.status === "Rejected") { %>
+                        <a href="/submitReview/<%= assignment._id %>"
+                           class="inline-block bg-purple-600 px-6 py-3 rounded-lg text-white font-semibold hover:bg-purple-700 transition">
+                           🔄 Resubmit for Review
+                        </a>
+                    <% } %>
+                </section>
+
+
+                <!-- FILE ATTACHMENTS -->
+                <section>
+                    <h2 class="text-xl font-bold mb-4">📎 Attached Files</h2>
+
+                    <% const preview = assignment.preview_url || [];
+                       const download = assignment.download_url || [];
+                       const count = Math.max(preview.length, download.length);
+                    %>
+
+                    <% if(count > 0) { %>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                        <% for(let i=0; i < count; i++) { %>
+
+                            <div class="border bg-gray-50 p-5 rounded-xl shadow-sm hover:shadow-md transition">
+
+                                <div class="flex items-center gap-4">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/337/337946.png"
+                                         class="w-12 h-12 opacity-90">
+                                    
+                                    <div>
+                                        <p class="font-semibold text-gray-800 text-sm">File <%= i+1 %></p>
+                                        <div class="flex flex-wrap gap-2 mt-2">
+
+                                            <!-- Open Preview -->
+                                            <% if(preview[i]) { %>
+                                                <a href="<%= preview[i] %>" 
+                                                   target="_blank"
+                                                   class="bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-700 shadow text-xs">
+                                                   Open Preview
+                                                </a>
+                                            <% } else { %>
+                                                <span class="text-gray-400 text-xs">No Preview</span>
+                                            <% } %>
+
+                                            <!-- Download -->
+                                            <% if(download[i]) { %>
+                                                <a href="<%= download[i] %>" download
+                                                   class="bg-emerald-600 text-white px-4 py-1 rounded-lg hover:bg-emerald-700 shadow text-xs">
+                                                   Download
+                                                </a>
+                                            <% } else { %>
+                                                <span class="text-gray-400 text-xs">No Download</span>
+                                            <% } %>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <% } %>
+                        </div>
+
+                    <% } else { %>
+                        <p class="text-gray-500 italic">No files attached.</p>
+                    <% } %>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

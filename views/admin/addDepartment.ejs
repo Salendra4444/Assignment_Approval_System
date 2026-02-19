@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Department Form</title>
+  <link rel="stylesheet" href="/addDepartment.css">
+</head>
+
+<body>
+  <main>
+    <%- include('partials/leftPartial') %>
+
+    <div id="right">
+      <h1>Add Department</h1>
+
+      <form class="dept-form" action="/addDepartment" method="POST">
+        <div class="form-group">
+          <label for="deptName">Department Name</label>
+          <input type="text" id="deptName" name="deptName" placeholder="Enter Department Name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="programType">Program Type</label>
+          <select id="programType" name="programType" required>
+            <option value="">Select Program Type</option>
+            <option value="Undergraduate">Undergraduate</option>
+            <option value="Postgraduate">Postgraduate</option>
+            <option value="Research">Research</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Address</label>
+          <textarea id="address" name="address" rows="3" placeholder="Enter Department Address" required></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Add Department</button>
+      </form>
+    </div>
+  </main>
+</body>
+
+</html>

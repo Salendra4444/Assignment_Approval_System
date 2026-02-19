@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users</title>
+  <link rel="stylesheet" href="/users.css">
+</head>
+
+<body>
+  <main>
+
+    <%- include('partials/leftPartial') %>
+
+    <div id="right">
+
+      <h1>Users</h1>
+
+      <!-- Filters + Search -->
+      <div class="filters-container">
+
+        <form action="/users" method="GET" class="filter-form">
+
+          <!-- Search -->
+          <input 
+            type="text" 
+            name="search" 
+            placeholder="Search by name or email"
+            value="<%= search || '' %>"
+            class="search-input"
+          />
+
+          <!-- Filter by Role -->
+          <select name="role" class="filter-select">
+            <option value="">All Roles</option>
+            <option value="Student" <%= role === 'Student' ? 'selected' : '' %>>Student</option>
+            <option value="Professor" <%= role === 'Professor' ? 'selected' : '' %>>Professor</option>
+            <option value="HOD" <%= role === 'HOD' ? 'selected' : '' %>>HOD</option>
+          </select>
+
+          <!-- Filter by Department -->
+          <select name="department" class="filter-select">
+            <option value="">All Departments</option>
+
+            <% departments.forEach(dep => { %>
+              <option 
+                value="<%= dep.departmentName %>" 
+                <%= department === dep.departmentName ? 'selected' : '' %>>
+                <%= dep.departmentName %>
+              </option>
+            <% }) %>
+
+          </select>
+
+          <button type="submit" class="apply-btn">Apply</button>
+
+        </form>
+
+      </div>
+
+
+      <!-- Users Table -->
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Department</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <% if (users && users.length > 0) { %>
+
+            <% users.forEach((user) => { %>
+              <tr>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td><%= user.role %></td>
+
+                <!-- Correct field: departement -->
+                <td><%= user.departement || 'N/A' %></td>
+
+                <!-- You don't have a status in DB, so default: Active -->
+                <td><%= user.status || 'Active' %></td>
+
+                <td>
+                  <a href="/editUser/<%= user._id %>" class="edit-btn">Edit</a>
+
+                  <form 
+                    action="/deleteUser/<%= user._id %>" 
+                    method="POST"
+                    style="display:inline;"
+                    onsubmit="return confirm('Delete this user?')">
+                    
+                    <button type="submit" class="delete-btn">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+
+          <% } else { %>
+
+            <tr>
+              <td colspan="6" style="text-align:center;">No users found.</td>
+            </tr>
+
+          <% } %>
+
+        </tbody>
+
+      </table>
+
+
+      <!-- Pagination -->
+      <div class="pagination">
+
+        <% if (currentPage > 1) { %>
+          <a href="/users?page=<%= currentPage - 1 %>" class="page-btn">Previous</a>
+        <% } %>
+
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <a 
+            href="/users?page=<%= i %>" 
+            class="page-btn <%= currentPage === i ? 'active' : '' %>">
+            <%= i %>
+          </a>
+        <% } %>
+
+        <% if (currentPage < totalPages) { %>
+          <a href="/users?page=<%= currentPage + 1 %>" class="page-btn">Next</a>
+        <% } %>
+
+      </div>
+
+    </div>
+
+  </main>
+</body>
+
+</html>

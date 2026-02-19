@@ -1,0 +1,310 @@
+/* === General layout === */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+}
+
+main {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* === LEFT NAVIGATION (IMPROVED) === */
+
+#left {
+  width: 22vw;
+  min-width: 240px;
+  padding: 30px 22px;
+  background: linear-gradient(90deg, #005c97, #363795);
+  border-right: 1px solid #d7dbe4;
+  height: 100vh;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title (Admin Panel) */
+#left #title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 35px;
+}
+
+#left #title a {
+  text-decoration: none;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  transition: 0.2s ease;
+}
+
+#left #title a:hover {
+  color: #d0d6ff;
+}
+
+/* Navigation container */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Navigation Items */
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1px solid #dfe3ec;
+  border-radius: 5px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Emoji + text spacing */
+.nav-item span {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Hover Effect — Smooth + Premium */
+.nav-item:hover {
+  background: #eef0ff;
+  border-color: #c5c8f7;
+  transform: translateX(6px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+/* Active page highlight */
+.nav-item.active {
+  background: #dce0ff;
+  border-color: #b6bdff;
+  font-weight: 700;
+  color: #23235a;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+
+#logout{
+  background: rgb(240, 37, 37);
+  color: white;
+}
+
+
+/* ================================
+   RIGHT SECTION
+================================ */
+#right {
+  flex: 1;
+  padding: 35px 45px;
+  background: #f7f9fc; /* same as department dashboard */
+  min-height: 100vh;
+}
+
+#right h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0a1f3f;
+  margin-bottom: 25px;
+}
+
+
+/* ================================
+   FILTERS SECTION
+================================ */
+.filters-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.filter-form {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+/* Search Input */
+.search-input {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid #ccd3df;
+  border-radius: 8px;
+  outline: none;
+  background: #ffffff;
+}
+
+.search-input:focus {
+  border-color: #4a6cf7;
+  box-shadow: 0 0 5px rgba(74,108,247,0.4);
+}
+
+/* Dropdowns */
+.filter-select {
+  padding: 10px 14px;
+  border: 1px solid #ccd3df;
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filter-select:focus {
+  border-color: #4a6cf7;
+  box-shadow: 0 0 5px rgba(74,108,247,0.3);
+}
+
+/* Apply Button */
+.apply-btn {
+  padding: 10px 20px;
+  border: none;
+  background-color: #0c3067;
+  color: white;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.apply-btn:hover {
+  background-color: #0f2c59;
+}
+
+
+/* ================================
+   USERS TABLE
+================================ */
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.users-table thead {
+  background: #0c3067; /* match department table */
+  color: white;
+}
+
+.users-table th {
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.users-table td {
+  padding: 14px;
+  font-size: 15px;
+  border-bottom: 1px solid #e4e7ee;
+  color: #333;
+}
+
+/* Hover Row */
+.users-table tr:hover {
+  background-color: #eef3ff;
+}
+
+
+/* ================================
+   ACTION BUTTONS
+================================ */
+.edit-btn,
+.delete-btn {
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: 0.25s;
+  font-weight: 600;
+}
+
+/* Edit Button */
+.edit-btn {
+  background-color: #4a6cf7;
+}
+
+.edit-btn:hover {
+  background-color: #364fdd;
+}
+
+/* Delete Button */
+.delete-btn {
+  background-color: #d9534f;
+}
+
+.delete-btn:hover {
+  background-color: #b9413e;
+}
+
+
+/* ================================
+   PAGINATION
+================================ */
+.pagination {
+  margin-top: 25px;
+  margin-left: 240px;
+  display: flex;
+  gap: 10px;
+}
+
+.page-btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  background-color: #e2e6ef;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.25s;
+}
+
+.page-btn:hover {
+  background-color: #cfd5e3;
+}
+
+.page-btn.active {
+  background-color: #4a6cf7;
+  color: white;
+  font-weight: 700;
+}
+
+
+/* ================================
+   RESPONSIVE FIXES
+================================ */
+@media (max-width: 768px) {
+  #right {
+    padding: 25px;
+  }
+
+  .filter-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input,
+  .filter-select {
+    width: 100%;
+  }
+
+  .apply-btn {
+    width: 100%;
+  }
+}

@@ -1,0 +1,161 @@
+/* === General layout === */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+}
+
+main {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* === LEFT NAVIGATION (IMPROVED) === */
+
+#left {
+  width: 22vw;
+  min-width: 240px;
+  padding: 30px 22px;
+  background: linear-gradient(90deg, #005c97, #363795);
+  border-right: 1px solid #d7dbe4;
+  height: 100vh;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title (Admin Panel) */
+#left #title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 35px;
+}
+
+#left #title a {
+  text-decoration: none;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  transition: 0.2s ease;
+}
+
+#left #title a:hover {
+  color: #d0d6ff;
+}
+
+/* Navigation container */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Navigation Items */
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1px solid #dfe3ec;
+  border-radius: 5px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Emoji + text spacing */
+.nav-item span {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Hover Effect — Smooth + Premium */
+.nav-item:hover {
+  background: #eef0ff;
+  border-color: #c5c8f7;
+  transform: translateX(6px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+/* Active page highlight */
+.nav-item.active {
+  background: #dce0ff;
+  border-color: #b6bdff;
+  font-weight: 700;
+  color: #23235a;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+#logout{
+  background: rgb(240, 37, 37);
+  color: white;
+}
+
+/* === Right section === */
+#right {
+  flex: 1;
+  padding: 40px;
+}
+
+#right h1 {
+  margin-bottom: 25px;
+  color: #333;
+  font-size: 22px;
+}
+
+/* === Dashboard box layout === */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* === Box style === */
+.box {
+  border-radius: 12px;
+  padding: 25px 20px;
+  background-color: #f4f5f7;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.box .label {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.box .value {
+  font-size: 32px;
+  font-weight: bold;
+  color: #0a1f3f;
+  margin: 0;
+}
+
+#dash{
+    margin-top: 20px;
+    font-size: 6vh;
+    color: #555;
+}
+
+/* === Pastel background colors === */
+.light-blue {
+  background-color: #9db1df;
+}
+
+.light-green {
+  background-color: #8ed49c;
+}
+
+.light-orange {
+  background-color: #e9b484;
+}
+
+.light-purple {
+  background-color: #ac91d8;
+}

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+    <div class="flex">
+
+        <!-- Sidebar -->
+        <%- include("partials/navBar", { activePage: "dashboard" }) %>
+
+            <% let Submitted=0; let Approved=0; let Rejected=0; stats.statusWise.forEach(status=> {
+                if(status._id === "Submitted") Submitted = status.count;
+                else if(status._id === "Approved") Approved = status.count;
+                else if(status._id === "Rejected") Rejected = status.count;
+                });
+                %>
+
+                <!-- MAIN CONTENT -->
+                <main class="flex-1 p-10">
+
+                    <!-- Title -->
+                    <h1 class="text-3xl font-semibold mb-8">Professor Dashboard</h1>
+
+                    <!-- STATS CARDS -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+
+                        <!-- Pending Reviews -->
+                        <div
+                            class="p-6 rounded-lg border border-indigo-200 bg-gradient-to-br from-indigo-50 to-indigo-100 shadow-sm hover:shadow-md transition">
+                            <p class="text-indigo-800 font-semibold text-sm tracking-wide">Pending Reviews</p>
+                            <p class="text-4xl font-extrabold mt-1 text-indigo-900">
+                                <%= Submitted %>
+                            </p>
+                        </div>
+
+                        <!-- Approved -->
+                        <div
+                            class="p-6 rounded-lg border border-green-200 bg-gradient-to-br from-green-50 to-green-100 shadow-sm hover:shadow-md transition">
+                            <p class="text-green-800 font-semibold text-sm tracking-wide">Approved</p>
+                            <p class="text-4xl font-extrabold mt-1 text-green-900">
+                                <%= Approved %>
+                            </p>
+                        </div>
+
+                        <!-- Rejected -->
+                        <div
+                            class="p-6 rounded-lg border border-red-200 bg-gradient-to-br from-red-50 to-red-100 shadow-sm hover:shadow-md transition">
+                            <p class="text-red-800 font-semibold text-sm tracking-wide">Rejected</p>
+                            <p class="text-4xl font-extrabold mt-1 text-red-900">
+                                <%= Rejected %>
+                            </p>
+                        </div>
+
+                        <!-- Total Reviewed -->
+                        <div
+                            class="p-6 rounded-lg border border-yellow-200 bg-gradient-to-br from-yellow-50 to-yellow-100 shadow-sm hover:shadow-md transition">
+                            <p class="text-yellow-800 font-semibold text-sm tracking-wide">Total Reviewed</p>
+                            <p class="text-4xl font-extrabold mt-1 text-yellow-900">
+                                <%= stats.totalAssignments[0]?.total || 0 %>
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <!-- ASSIGNMENTS AWAITING REVIEW -->
+                    <h2 class="text-xl font-semibold mb-4">Assignments Awaiting Review</h2>
+
+                    <div class="bg-white rounded-xl shadow divide-y">
+
+                        <% if (pendingAssignments && pendingAssignments.length> 0) { %>
+
+                            <% pendingAssignments.forEach(a=> { %>
+                                <div class="flex items-center justify-between p-5">
+
+                                    <div>
+                                        <p class="text-gray-900 font-medium">
+                                            <%= a.studentName %> - <%= a.title %>
+                                        </p>
+                                        <p class="text-gray-500 text-sm">
+                                            Submitted: <%= a.submittedOn %> • <%= a.daysPending %> days pending
+                                        </p>
+                                    </div>
+
+                                    <!-- Buttons -->
+                                    <div class="flex gap-3">
+
+                                        <a href="/professor/review/<%= a._id %>"
+                                            class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">
+                                            Review
+                                        </a>
+
+                                        <a href="/professor/details/<%= a._id %>"
+                                            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
+                                            Details
+                                        </a>
+
+                                    </div>
+
+                                </div>
+                                <% }) %>
+
+                                    <% } else { %>
+                                        <p class="p-5 text-gray-500 text-center">No assignments pending for review.</p>
+                                        <% } %>
+
+                    </div>
+
+                    <a href="/professor/myReview" class="block mt-4 text-emerald-700 font-medium hover:underline">
+                        View All Assignments →
+                    </a>
+
+                </main>
+
+    </div>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- a.submittedAt ? new Date(a.submittedAt).toLocaleDateString() : "-"  -->

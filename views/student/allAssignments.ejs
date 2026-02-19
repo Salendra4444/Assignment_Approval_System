@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Assignments</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="flex">
+
+        <!-- Sidebar -->
+        <%- include("partials/navBar", { activePage: "assignments" }) %>
+
+        <main class="flex-1 p-10">
+
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-semibold">My Assignments</h1>
+            </div>
+
+            <!-- Filters -->
+            <form method="GET" class="flex flex-wrap gap-4 mb-6">
+
+                <!-- Status Filter -->
+                <select name="status"
+                    class="p-3 border bg-white rounded-lg text-sm focus:ring-2 focus:ring-emerald-500">
+                    <option value="">All Status</option>
+                    <option value="Draft" <%=status==='Draft' ? 'selected' : '' %>>Draft</option>
+                    <option value="Submitted" <%=status==='Submitted' ? 'selected' : '' %>>Submitted</option>
+                    <option value="Approved" <%=status==='Approved' ? 'selected' : '' %>>Approved</option>
+                    <option value="Rejected" <%=status==='Rejected' ? 'selected' : '' %>>Rejected</option>
+                </select>
+
+                <!-- Sort -->
+                <select name="sort"
+                    class="p-3 border bg-white rounded-lg text-sm focus:ring-2 focus:ring-emerald-500">
+                    <option value="newest" <%=sort==='newest' ? 'selected' : '' %>>Newest First</option>
+                    <option value="oldest" <%=sort==='oldest' ? 'selected' : '' %>>Oldest First</option>
+                </select>
+
+                <button class="px-6 py-3 bg-emerald-600 text-white rounded-lg shadow hover:bg-emerald-700 text-sm">
+                    Apply
+                </button>
+
+            </form>
+
+            <!-- Table -->
+            <div class="overflow-x-auto bg-white rounded-xl shadow border border-gray-200">
+
+                <table class="min-w-full text-sm">
+                    <thead class="bg-gray-50 border-b">
+                        <tr>
+                            <th class="py-4 px-6 text-left font-semibold">Title</th>
+                            <th class="py-4 px-6 text-left font-semibold">Category</th>
+                            <th class="py-4 px-6 text-left font-semibold">Status</th>
+                            <th class="py-4 px-6 text-left font-semibold">Submitted Date</th>
+                            <th class="py-4 px-6 text-left font-semibold">Reviewer</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y">
+
+                        <% if(assignments.length===0) { %>
+                        <tr>
+                            <td colspan="6" class="text-center py-6 text-gray-500">
+                                No assignments found.
+                            </td>
+                        </tr>
+                        <% } %>
+
+                        <% assignments.forEach(a=> { %>
+
+                        <!-- CLICKABLE ROW -->
+                        <tr class="hover:bg-gray-100 cursor-pointer"
+                            data-href="/preview/<%= a._id %>">
+
+                            <!-- Title -->
+                            <td class="px-6 py-4">
+                                <%= a.title %>
+                            </td>
+
+                            <!-- Category -->
+                            <td class="px-6 py-4 capitalize">
+                                <%= a.category %>
+                            </td>
+
+                            <!-- Status Badge -->
+                            <td class="px-6 py-4">
+                                <% let color='bg-gray-500' ; 
+                                    if(a.status==='Draft') color='bg-yellow-500';
+                                    if(a.status==='Submitted') color='bg-orange-500';
+                                    if(a.status==='Approved') color='bg-green-600';
+                                    if(a.status==='Rejected') color='bg-red-600'; 
+                                %>
+
+                                <span class="text-white px-3 py-1 rounded-full text-xs <%= color %>">
+                                    <%= a.status %>
+                                </span>
+                            </td>
+
+                            <!-- Submitted Date -->
+                            <td class="px-6 py-4">
+                                <%= a.submittedAt ? new Date(a.submittedAt).toLocaleDateString() : "-" %>
+                            </td>
+
+                            <!-- Reviewer OR Buttons -->
+                            <td class="px-6 py-4">
+
+                                <% if (a.status==="Draft") { %>
+
+                                <form action="/submitReview/<%= a._id %>" method="GET"
+                                    onclick="event.stopPropagation();">
+                                    <button
+                                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-xs">
+                                        Submit for Review
+                                    </button>
+                                </form>
+
+                                <% } else if (a.status==="Rejected") { %>
+
+                                <form action="/submitReview/<%= a._id %>" method="GET"
+                                    onclick="event.stopPropagation();">
+                                    <button
+                                        class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 text-xs">
+                                        Resubmit for Review
+                                    </button>
+                                </form>
+
+                                <% } else { %>
+
+                                <%= a.currentReviewer || "-" %>
+
+                                <% } %>
+
+                            </td>
+
+                        </tr>
+
+                        <% }) %>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex justify-center mt-6 space-x-2">
+
+                <% if (page > 1) { %>
+                <a href="?page=<%= page-1 %>&status=<%= status %>&sort=<%= sort %>"
+                    class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Prev</a>
+                <% } %>
+
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                <a href="?page=<%= i %>&status=<%= status %>&sort=<%= sort %>"
+                    class="px-4 py-2 rounded 
+                    <%= i === page ? 'bg-emerald-600 text-white' : 'bg-gray-200 hover:bg-gray-300' %>">
+                    <%= i %>
+                </a>
+                <% } %>
+
+                <% if (page < totalPages) { %>
+                <a href="?page=<%= page+1 %>&status=<%= status %>&sort=<%= sort %>"
+                    class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Next</a>
+                <% } %>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- CLICKABLE ROW SCRIPT -->
+    <script>
+        document.querySelectorAll("tr[data-href]").forEach(row => {
+            row.addEventListener("click", () => {
+                window.location = row.dataset.href;
+            });
+        });
+    </script>
+
+</body>
+
+</html>
