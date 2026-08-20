@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="/login.css">
+    <style>
+        .form-group {
+            margin-bottom: 15px;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="heading">University Assignment Portal</h1>
+    <form action="/register" method="POST">
+        <h1>Sign Up</h1>
+
+        <div class="form-group">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" value="<%= name %>" required>
+            <p id="err-name" style="color: red;"><%= msg1 || " " %></p>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="<%= email %>" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" maxlength="10">
+        </div>
+
+        <div class="form-group">
+            <label for="departement">Department:</label>
+            <input type="text" id="departement" name="departement">
+        </div>
+
+        <div class="form-group">
+            <label for="role">Role:</label>
+            <select id="role" name="role" required>
+                <option value="Student" <%= role === "Student" ? "selected" : "" %>>Student</option>
+                <option value="Professor" <%= role === "Professor" ? "selected" : "" %>>Professor</option>
+                <option value="H.O.D" <%= role === "H.O.D" ? "selected" : "" %>>H.O.D</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+            <p id="err-password" style="color: red;"><%= msg2 || " " %></p>
+        </div>
+
+        <button type="submit">Sign Up</button>
+        <p style="text-align: center; margin-top: 20px;">
+            Already have an account? <a href="/" style="color: #007bff; text-decoration: none;">Login here</a>
+        </p>
+    </form>
+</body>
+</html>
