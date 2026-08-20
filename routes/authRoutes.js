@@ -6,7 +6,13 @@ const router = express.Router();
 
 
 
-router.post('/login',authController.loginPost);
+router.get('/register', (req, res) => {
+  res.render("register", { name: "", email: "", msg1: "", msg2: "", role: "Student" });
+});
+
+router.post('/register', authController.signupPost);
+
+router.post('/login', authController.loginPost);
  
 
 router.get('/logout', (req, res) => {
