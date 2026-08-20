@@ -191,6 +191,43 @@ The application uses:
 * Environment variables for sensitive credentials
 * Protected routes
 
+---
+
+## 🔎 Test/demo accounts (development only)
+
+To make it easy to try the app locally without creating users, a set of plain-text demo credentials was temporarily added to the authentication controller. These are intended for local development or demo purposes only.
+
+Use the following credentials on the login page:
+
+- Admin (admin dashboard)
+  - Email: admin@gmail.com
+  - Password: admin
+
+- Student (student dashboard)
+  - Email: student1@example.com
+  - Password: student1
+
+- Another Student
+  - Email: student2@example.com
+  - Password: student2
+
+- Professor (professor dashboard)
+  - Email: prof@example.com
+  - Password: prof1
+
+- H.O.D (hod dashboard)
+  - Email: hod@example.com
+  - Password: hodadmin
+
+Important notes
+- These demo credentials are stored in plain text in the code for convenience — DO NOT use them in production or on any public deployment.
+- Recommended alternatives for safer testing:
+  1. Use the `routes/dataSeeding.js` script to seed users with hashed passwords into your local database (I can update that script to insert these accounts with bcrypt-hashed passwords if you want).
+  2. Store test credentials in a `.env` file and read them at runtime.
+  3. Remove the hardcoded demo checks before deploying.
+
+---
+
 ## 🗄️ Database
 
 The application uses **MongoDB** with **Mongoose** for storing and managing application data.
@@ -224,5 +261,3 @@ The system helps to:
 ## 👨‍💻 Author
 
 **Salendra Singh Yadav**
-
-
