@@ -16,12 +16,23 @@
       <% let studentCount=0;
          let professorCount=0;
          let hodCount=0;
+         let totalDepartments = 0;
       
-      data.forEach(item=> {
-        if (item._id === 'Student') studentCount = item.countUsers;
-        if (item._id === 'Professor') professorCount = item.countUsers;
-        if (item._id === 'HOD') hodCount = item.countUsers;
+      // guard against empty or undefined `data` and `deptCount`
+      if (Array.isArray(data)) {
+        data.forEach(item=> {
+          if (!item || typeof item !== 'object') return;
+          const id = item._id || '';
+          if (id === 'Student') studentCount = item.countUsers || 0;
+          if (id === 'Professor') professorCount = item.countUsers || 0;
+          // handle variations like 'HOD' and 'H.O.D'
+          if (id === 'HOD' || id === 'H.O.D' || id === 'H.O.D.') hodCount = item.countUsers || 0;
         });
+      }
+
+      if (Array.isArray(deptCount) && deptCount.length > 0 && deptCount[0]) {
+        totalDepartments = deptCount[0].totalDepartments || 0;
+      }
         %>
 
 
@@ -31,7 +42,7 @@
           <div class="stats-container">
             <div class="box light-blue">
               <p class="label">Total Departments</p>
-              <p class="value"><%= deptCount[0].totalDepartments %></p>
+              <p class="value"><%= totalDepartments %></p>
             </div>
 
             <div class="box light-green">
