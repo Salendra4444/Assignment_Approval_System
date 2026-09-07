@@ -36,9 +36,22 @@ app.set('views', [
 ]);
 
 app.get('/', (req, res) => {
+  // Display appropriate error message based on auth error
+  let msg1 = "";
+  let msg2 = "";
+  
+  const error = req.query.error;
+  if (error === 'login_required') {
+    msg1 = "Please log in to access this page.";
+  } else if (error === 'session_expired') {
+    msg1 = "Your session has expired. Please log in again.";
+  } else if (error === 'invalid_session') {
+    msg1 = "Invalid session. Please log in again.";
+  }
+  
   res.render("login", {
     email: "",
-    msg1: "",
+    msg1: msg1,
     msg2: ""
   });
 });
