@@ -5,11 +5,12 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const dashboardQuery = require('../model/query/dashBoardQuery');
 const allDepartments = require('../model/query/DepartmentQuery');
+const auth = require('../controller/verifyAuthController');
 
 
       
 
-router.get('/adminDashboard', async (req, res) => {
+router.get('/adminDashboard', auth, async (req, res) => {
   const data = await dashboardQuery.getUserStats();
   const deptCount = await dashboardQuery.getDepartmentCount();
   console.log('Rendering admin dashboard');
@@ -19,7 +20,7 @@ router.get('/adminDashboard', async (req, res) => {
 
 /************************************************************************************/
 
-router.get('/Departments', async (req, res) => {
+router.get('/Departments', auth, async (req, res) => {
   console.log("Rendering Department page");
 
   const page = parseInt(req.query.page) || 1;
@@ -76,16 +77,14 @@ router.get('/Departments', async (req, res) => {
 
 
 
-
-router.get('/addDepartment', async (req, res) => {
+router.get('/addDepartment', auth, async (req, res) => {
   console.log('Rendering addDepartment page');
   res.render("addDepartment");
 });
 
 
 
-
-router.post('/addDepartment', async (req, res) => {
+router.post('/addDepartment', auth, async (req, res) => {
   const { deptName, programType, address } = req.body;
   await departmentModel.create({
     departmentName: deptName,
@@ -101,7 +100,7 @@ router.post('/addDepartment', async (req, res) => {
 
 
 
-router.get('/editDepartment/:id', async (req, res) => {
+router.get('/editDepartment/:id', auth, async (req, res) => {
   console.log('Rendering edit users page');
   const deptData = await departmentModel.findById(req.params.id);
   res.render("editDepartment", { deptData });
@@ -109,7 +108,7 @@ router.get('/editDepartment/:id', async (req, res) => {
 
 
 
-router.post('/update-dept/:id', async (req, res) => {
+router.post('/update-dept/:id', auth, async (req, res) => {
   const { deptName, programType, address } = req.body;
   const id = req.params.id;
   await departmentModel.findByIdAndUpdate(id, {
@@ -126,7 +125,7 @@ router.post('/update-dept/:id', async (req, res) => {
 
 
 
-router.post('/deleteDepartment/:id', async (req, res) => {
+router.post('/deleteDepartment/:id', auth, async (req, res) => {
   console.log('deleting department');
   await departmentModel.findByIdAndDelete(req.params.id);
   res.redirect("/departments")
@@ -152,7 +151,7 @@ router.post('/deleteDepartment/:id', async (req, res) => {
 
   
 
-router.get('/users', async (req, res) => {
+router.get('/users', auth, async (req, res) => {
   console.log('Rendering user page');
 
   const page = parseInt(req.query.page) || 1;
@@ -188,7 +187,7 @@ router.get('/users', async (req, res) => {
 
 
 
-router.get('/addUsers', async (req, res) => {
+router.get('/addUsers', auth, async (req, res) => {
   console.log('Rendering add users page');
   const alldepartments = await allDepartments();
  // console.log(alldepartments);
@@ -197,7 +196,7 @@ router.get('/addUsers', async (req, res) => {
 
 
 
-router.post('/add-users', async (req, res) => {
+router.post('/add-users', auth, async (req, res) => {
   const { name, email, password, phone, department, role } = req.body;
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -217,7 +216,7 @@ router.post('/add-users', async (req, res) => {
 
 
 
-router.post('/update-user/:id', async (req, res) => {
+router.post('/update-user/:id', auth, async (req, res) => {
   const { name, email, password, phone, department, role } = req.body;
   const id = req.params.id;
   const saltRounds = 10;
@@ -238,7 +237,7 @@ router.post('/update-user/:id', async (req, res) => {
 })
 
 
-router.get('/editUser/:id', async (req, res) => {
+router.get('/editUser/:id', auth, async (req, res) => {
   console.log('Rendering edit users page');
   const userData = await userModel.findById(req.params.id);
   const alldepartments = await allDepartments();
@@ -248,7 +247,7 @@ router.get('/editUser/:id', async (req, res) => {
 
 
 
-router.post('/deleteUser/:id', async (req, res) => {
+router.post('/deleteUser/:id', auth, async (req, res) => {
   console.log('deleting user');
   await userModel.findByIdAndDelete(req.params.id);
   res.redirect("/users")
