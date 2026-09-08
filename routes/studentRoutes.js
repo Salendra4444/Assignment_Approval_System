@@ -4,6 +4,7 @@ const AssignmentModel = require('../model/schema/assignment')
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const bcrypt = require('bcrypt');
 const cloudinary = require('cloudinary').v2;
 const assignmentStatus = require('../model/query/studentDashboardQuery');
 const DepartmentModel = require('../model/schema/Department');
@@ -97,10 +98,97 @@ router.get("/allAssignments",auth, async (req, res) => {
 
 
 router.get('/studentProfile',auth, async (req, res) => {
-  const userDetail = req.user;
-  const user = await userModel.findOne({email:userDetail.email}); 
-  console.log("User Details:", user);
-  res.render("studentProfile", { activePage: "profile" , user });
+  const email = req.user && req.user.email;
+
+  if (!email) {
+    return res.redirect('/?error=invalid_session');
+  }
+
+  try {
+    let user = await userModel.findOne({ email });
+
+    if (!user && req.user.role === 'Student') {
+      user = await userModel.create({
+        name: email.split('@')[0],
+        email,
+        role: 'Student'
+      });
+    }
+
+    if (!user) {
+      return res.status(404).send('Student profile not found');
+    }
+
+    res.render("studentProfile", {
+      activePage: "profile",
+      user,
+      message: req.query.message,
+      error: req.query.error
+    });
+  } catch (err) {
+    console.error('Unable to load student profile:', err);
+    res.status(500).send('Unable to load student profile');
+  }
+});
+
+router.post('/studentProfile/phone', auth, async (req, res) => {
+  const phone = String(req.body.phone || '').trim();
+
+  if (!/^\d{10}$/.test(phone)) {
+    return res.redirect('/studentProfile?error=Phone number must contain exactly 10 digits');
+  }
+
+  try {
+    const user = await userModel.findOneAndUpdate(
+      { email: req.user.email },
+      { phone: Number(phone) },
+      { new: true, runValidators: true }
+    );
+
+    if (!user) {
+      return res.redirect('/studentProfile?error=Student account not found');
+    }
+
+    res.redirect('/studentProfile?message=Phone number updated');
+  } catch (err) {
+    console.error('Unable to update phone number:', err);
+    res.redirect('/studentProfile?error=Unable to update phone number');
+  }
+});
+
+router.post('/studentProfile/reset-password', auth, async (req, res) => {
+  const { newPassword, confirmPassword } = req.body;
+
+  const student = await userModel.findOne({ email: req.user.email, role: 'Student' });
+  if (!student) {
+    return res.status(403).send('Only student accounts can reset a student password');
+  }
+
+  if (!newPassword || newPassword.length < 6) {
+    return res.redirect('/studentProfile?error=Password must be at least 6 characters');
+  }
+
+  if (newPassword !== confirmPassword) {
+    return res.redirect('/studentProfile?error=Passwords do not match');
+  }
+
+  try {
+    const password = await bcrypt.hash(newPassword, 10);
+    const user = await userModel.findOneAndUpdate(
+      { email: req.user.email },
+      { password },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.redirect('/studentProfile?error=Student account not found');
+    }
+
+    res.redirect('/studentProfile?message=Password reset successfully');
+  } catch (err) {
+    console.error('Unable to reset password:', err);
+    res.redirect('/studentProfile?error=Unable to reset password');
+  }
 });
 
 
@@ -134,29 +222,25 @@ router.get('/preview/:id',auth, async (req, res) => {
 
 router.get('/submitReview/:id',auth, async(req, res) => {
   const assignmentId = req.params.id;
-  const userDetail = req.user;
-//  console.log("User in submit review:", userDetail);
   const assignment =  await AssignmentModel.findById(assignmentId);
-  const user = await userModel.findOne({email:userDetail.email}); 
-  const userDept = user.departement;
-//  console.log("User details:", user.departement);
-  const professors = await userModel.find({ role: 'Professor', departement: userDept });
-// console.log("Professors in the same department:", professors);
-
-//console.log("Assignment Details: ", assignment);
-  res.render("assignmentDetail", { activePage: "dashboard" , assignment,professors });
+  res.render("assignmentDetail", { activePage: "dashboard", assignment });
 });
 
 
 router.post('/submitReview/:id',auth, async(req, res) => {
   const assignmentId = req.params.id;
-  console.log("Reviewer ID from form:", req.body.reviewer);
-    await AssignmentModel.findByIdAndUpdate(
-      assignmentId,
-      { status: "Submitted" ,
-        currentReviewer: req.body.reviewer
-      }
-    );  
+  const user = await userModel.findOne({ email: req.user.email });
+  const assignment = await AssignmentModel.findById(assignmentId);
+
+  if (!user || !assignment || String(assignment.studentId) !== String(user._id)) {
+    return res.status(403).send('You can only submit your own assignment');
+  }
+
+  await AssignmentModel.findByIdAndUpdate(assignmentId, {
+    status: "Submitted",
+    currentReviewer: null
+  });
+
   res.redirect('/allAssignments');
 });
 
@@ -227,11 +311,29 @@ router.get('/single-upload',auth, (req, res) => {
   res.render("singleUpload", { activePage: "dashboard"});
 });
 
+router.get('/uploadAssignment', auth, (req, res) => {
+  res.render("singleUpload", { activePage: "dashboard" });
+});
+
 
 router.post('/uploadAssignment', auth ,upload.single('singleUpload'), async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ success: false, message: "No file uploaded" });
+      return res.status(400).render("singleUpload", {
+        error: "Please select a PDF file to upload.",
+        activePage: "dashboard"
+      });
+    }
+
+    const { title, description } = req.body;
+    const category = 'Assignment';
+
+    if (!title || !description) {
+      fs.unlinkSync(req.file.path);
+      return res.status(400).render("singleUpload", {
+        error: "Title and description are required.",
+        activePage: "dashboard"
+      });
     }
 
     const result = await cloudinary.uploader.upload(req.file.path, {
@@ -242,16 +344,26 @@ router.post('/uploadAssignment', auth ,upload.single('singleUpload'), async (req
       unique_filename: false
     });
 
-    const {title, description, category} = req.body;
-
     const preview_url = result.secure_url;
     const download_url = result.secure_url.replace("/upload/", "/upload/fl_attachment/");
   
   
 
 
-    const userDetail = req.user;
-    const user = await userModel.findOne({email:userDetail.email}); 
+    const userEmail = req.user && req.user.email;
+    let user = userEmail ? await userModel.findOne({ email: userEmail }) : null;
+
+    if (!user && req.user.role === 'Student') {
+      user = await userModel.create({
+        name: userEmail.split('@')[0],
+        email: userEmail,
+        role: 'Student'
+      });
+    }
+
+    if (!user) {
+      throw new Error('Student account not found');
+    }
 
     const ack = await AssignmentModel.create({
       studentId: user._id,
@@ -259,7 +371,7 @@ router.post('/uploadAssignment', auth ,upload.single('singleUpload'), async (req
       description:description,
       category:category,
       filename: [req.file.originalname],
-      status: "Draft",
+      status: "Submitted",
       currentReviewer: null,
       download_url:[download_url],
       preview_url: [preview_url]
@@ -299,7 +411,8 @@ router.post('/uploadBulkAssignments',auth, upload.array("files", 5), async (req,
       return res.status(400).json({ success: false, message: "No files uploaded" });
     }
 
-    const { title, description, category } = req.body;
+    const { title, description } = req.body;
+    const category = 'Assignment';
 
     // Arrays to store preview_url and download_url
     const preview_url = [] //result.secure_url;

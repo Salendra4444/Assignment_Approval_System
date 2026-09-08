@@ -39,14 +39,9 @@
                         <!-- Category -->
                         <div>
                             <label class="block mb-2 text-sm font-semibold text-gray-700">Category</label>
-                            <select name="category"
+                            <input type="text" name="category" value="Assignment" readonly
                                 class="w-full p-3 border border-gray-300 rounded-xl text-sm bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                                 required>
-                                <option value="">Select Category</option>
-                                <option value="Assignment">Assignment</option>
-                                <option value="Thesis">Thesis</option>
-                                <option value="Report">Report</option>
-                            </select>
                         </div>
 
                     </div>
@@ -70,7 +65,7 @@
                                 class="border border-gray-300 rounded-xl p-3 bg-gray-50 hover:bg-gray-100 transition cursor-pointer">
                                 <input type="file" name="files"
                                     class="w-full text-sm text-gray-700 focus:outline-none"
-                                    accept=".pdf,.doc,.docx,.ppt,.pptx,.zip" required multiple>
+                                    accept=".pdf,application/pdf" required multiple>
                             </div>
 
                             <p class="text-xs text-gray-500 mt-1">Allowed: PDF only</p>

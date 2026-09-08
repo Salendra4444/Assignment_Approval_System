@@ -17,7 +17,8 @@ const assignmentSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        required: true
+        required: true,
+        enum: ['Assignment']
     },
     filename:{
         type: [String],
@@ -28,6 +29,30 @@ const assignmentSchema = new mongoose.Schema({
     },
     currentReviewer: {
         type: String,
+        default: null
+    },
+    professorRemarks: {
+        type: String,
+        default: ''
+    },
+    professorReviewedBy: {
+        type: String,
+        default: null
+    },
+    professorReviewedAt: {
+        type: Date,
+        default: null
+    },
+    hodRemarks: {
+        type: String,
+        default: ''
+    },
+    hodReviewedBy: {
+        type: String,
+        default: null
+    },
+    hodReviewedAt: {
+        type: Date,
         default: null
     },
     download_url:{

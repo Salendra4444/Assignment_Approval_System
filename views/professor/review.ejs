@@ -98,7 +98,7 @@
             </div>
 
             <!-- RIGHT — Only Download Button -->
-            <a href="<%= assignment.download_url[index] %>" target="_blank"
+                                <a href="<%= assignment.download_url?.[index] || assignment.preview_url?.[index] || '#' %>" target="_blank" download
                class="bg-green-600 text-white text-sm px-5 py-1.5 rounded-full hover:bg-green-700">
                 Download
             </a>
@@ -124,7 +124,7 @@
 
                             <div
                                 class="w-full h-[250px] md:h-[300px] border rounded-md overflow-hidden shadow-sm hover:shadow-lg transition-all bg-gray-100 flex items-center justify-center">
-                                <iframe src="<%- assignment.preview_url[0] %>" class="w-full h-full rounded-md"
+                                <iframe src="<%- assignment.preview_url?.[0] || assignment.download_url?.[0] || '' %>" class="w-full h-full rounded-md"
                                     title="Assignment Preview">
                                 </iframe>
                             </div>
@@ -133,18 +133,13 @@
 
 
                             <!-- FORM UNDER PREVIEW -->
-                            <form action="/review/submit" method="POST" enctype="multipart/form-data">
+                            <% if (!detailsOnly) { %>
+                            <form action="/review/submit" method="POST">
+                                <input type="hidden" name="assignmentId" value="<%= assignment._id %>">
 
                                 <label class="font-semibold text-gray-700">REMARKS:</label>
                                 <textarea name="remarks" class="w-full border rounded p-3 mt-2 mb-4"
                                     placeholder="Enter remarks for student..."></textarea>
-
-                                <label class="font-semibold text-gray-700 block">UPLOAD SIGNATURE(S):</label>
-                                <input type="file" name="signature" multiple class="border p-2 rounded mt-1 mb-2"
-                                    onchange="showFiles(this)">
-
-                                <!-- Show selected files -->
-                                <ul id="fileList" class="text-xs text-gray-600 mb-6"></ul>
 
                                 <div class="flex gap-3">
                                     <button type="submit" name="action" value="approve"
@@ -159,6 +154,7 @@
                                 </div>
 
                             </form>
+                            <% } %>
                         </div>
                     </div>
 
@@ -167,16 +163,6 @@
             </main>
     </div>
 
-
-    <script>
-        function showFiles(input) {
-            let list = document.getElementById("fileList");
-            list.innerHTML = "";
-            [...input.files].forEach(f => {
-                list.innerHTML += `<li>📄 ${f.name}</li>`;
-            });
-        }
-    </script>
 
 </body>
 

@@ -17,10 +17,11 @@
         <!-- Sidebar Partial -->
         <%- include("partials/navBar") %>
 
-            <% let Draft=0; let Approved=0; let Submitted=0; let Rejected=0 ; let i=5; data.forEach(item=> {
+            <% let Draft=0; let Approved=0; let Submitted=0; let HodReview=0; let Rejected=0 ; let i=5; data.forEach(item=> {
                 if (item._id === 'Draft') Draft = item.countAssignments;
                 if (item._id === 'Approved') Approved = item.countAssignments;
                 if (item._id === 'Submitted') Submitted = item.countAssignments;
+                if (item._id === 'HOD Review') HodReview = item.countAssignments;
                 if (item._id === 'Rejected') Rejected = item.countAssignments;
                 });
                 %>
@@ -31,7 +32,7 @@
                     <h1 class="text-2xl font-semibold mb-6">Assignment Dashboard</h1>
 
                     <!-- Stats Boxes -->
-                    <div class="grid grid-cols-4 gap-5 mb-10">
+                    <div class="grid grid-cols-5 gap-5 mb-10">
 
                         <div class="bg-blue-100 p-6 rounded-xl shadow">
                             <p class="text-gray-600 text-sm">Draft</p>
@@ -45,6 +46,11 @@
                             <p class="text-3xl font-bold">
                                 <%= Submitted %>
                             </p>
+                        </div>
+
+                        <div class="bg-blue-100 p-6 rounded-xl shadow">
+                            <p class="text-gray-600 text-sm">HOD Review</p>
+                            <p class="text-3xl font-bold"><%= HodReview %></p>
                         </div>
 
                         <div class="bg-yellow-100 p-6 rounded-xl shadow">

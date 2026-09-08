@@ -198,6 +198,26 @@ router.get('/addUsers', auth, async (req, res) => {
 
 router.post('/add-users', auth, async (req, res) => {
   const { name, email, password, phone, department, role } = req.body;
+  if (!/^\d{10}$/.test(String(phone || '').trim())) {
+    const alldepartments = await allDepartments();
+    return res.status(400).render('addUser', {
+      alldepartments,
+      error: 'Mobile number must contain exactly 10 digits.'
+    });
+  }
+  if (['HOD', 'H.O.D'].includes(role)) {
+    const existingHod = await userModel.findOne({
+      departement: department,
+      role: { $in: ['HOD', 'H.O.D'] }
+    });
+    if (existingHod) {
+      const alldepartments = await allDepartments();
+      return res.status(409).render('addUser', {
+        alldepartments,
+        error: 'This department already has a Head of Department.'
+      });
+    }
+  }
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -219,6 +239,16 @@ router.post('/add-users', auth, async (req, res) => {
 router.post('/update-user/:id', auth, async (req, res) => {
   const { name, email, password, phone, department, role } = req.body;
   const id = req.params.id;
+  if (['HOD', 'H.O.D'].includes(role)) {
+    const existingHod = await userModel.findOne({
+      _id: { $ne: id },
+      departement: department,
+      role: { $in: ['HOD', 'H.O.D'] }
+    });
+    if (existingHod) {
+      return res.status(409).send('This department already has a Head of Department');
+    }
+  }
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
 

@@ -27,6 +27,7 @@
                 <select name="status" class="border rounded px-3 py-2">
                     <option value="">All Status</option>
                     <option value="Submitted">Submitted</option>
+                    <option value="HOD Review">HOD Review</option>
                     <option value="Approved">Approved</option>
                     <option value="Rejected">Rejected</option>
                 </select>
@@ -49,10 +50,10 @@
                     <thead>
                         <tr class="border-b">
                             <th class="py-3 px-2 font-semibold">Title</th>
+                            <th class="py-3 px-2 font-semibold">Student</th>
                             <th class="py-3 px-2 font-semibold">Category</th>
                             <th class="py-3 px-2 font-semibold">Status</th>
                             <th class="py-3 px-2 font-semibold">Submitted Date</th>
-                            <th class="py-3 px-2 font-semibold">Reviewer</th>
                             <th class="py-3 px-2 font-semibold"></th> <!-- Actions -->
                         </tr>
                     </thead>
@@ -64,6 +65,12 @@
                             <!-- TITLE -->
                             <td class="py-3 px-2"><%= assign.title %></td>
 
+                            <!-- STUDENT -->
+                            <td class="py-3 px-2">
+                                <%= assign.student ? assign.student.name : 'Student' %>
+                                <span class="block text-xs text-gray-500"><%= assign.student ? assign.student.email : '' %></span>
+                            </td>
+
                             <!-- CATEGORY -->
                             <td class="py-3 px-2"><%= assign.category %></td>
 
@@ -71,6 +78,8 @@
                             <td class="py-3 px-2">
                                 <% if(assign.status === "Submitted"){ %>
                                     <span class="bg-orange-400 text-white px-3 py-1 rounded text-sm">Submitted</span>
+                                <% } else if(assign.status === "HOD Review"){ %>
+                                    <span class="bg-blue-500 text-white px-3 py-1 rounded text-sm">HOD Review</span>
                                 <% } else if(assign.status === "Approved"){ %>
                                     <span class="bg-green-500 text-white px-3 py-1 rounded text-sm">Approved</span>
                                 <% } else { %>
@@ -83,9 +92,6 @@
                                 <%= assign.submittedAt ? new Date(assign.submittedAt).toLocaleDateString() : "-" %>
                             </td>
 
-                            <!-- REVIEWER -->
-                            <td class="py-3 px-2"><%= assign.reviewer || "-" %></td>
-
                             <!-- ACTION BUTTONS -->
                             <td class="py-3 px-2 text-right">
 
@@ -94,6 +100,9 @@
                                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded">
                                        Review
                                     </a>
+
+                                <% } else if(assign.status === "HOD Review"){ %>
+                                    <span class="text-blue-600 font-semibold">Awaiting HOD</span>
 
                                 <% } else if(assign.status === "Approved"){ %>
                                     <span class="text-green-600 font-semibold">✔ Approved</span>

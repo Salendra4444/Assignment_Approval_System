@@ -30,6 +30,7 @@
                     <option value="">All Status</option>
                     <option value="Draft" <%=status==='Draft' ? 'selected' : '' %>>Draft</option>
                     <option value="Submitted" <%=status==='Submitted' ? 'selected' : '' %>>Submitted</option>
+                    <option value="HOD Review" <%=status==='HOD Review' ? 'selected' : '' %>>HOD Review</option>
                     <option value="Approved" <%=status==='Approved' ? 'selected' : '' %>>Approved</option>
                     <option value="Rejected" <%=status==='Rejected' ? 'selected' : '' %>>Rejected</option>
                 </select>
@@ -54,7 +55,6 @@
                     <thead class="bg-gray-50 border-b">
                         <tr>
                             <th class="py-4 px-6 text-left font-semibold">Title</th>
-                            <th class="py-4 px-6 text-left font-semibold">Category</th>
                             <th class="py-4 px-6 text-left font-semibold">Status</th>
                             <th class="py-4 px-6 text-left font-semibold">Submitted Date</th>
                             <th class="py-4 px-6 text-left font-semibold">Reviewer</th>
@@ -65,7 +65,7 @@
 
                         <% if(assignments.length===0) { %>
                         <tr>
-                            <td colspan="6" class="text-center py-6 text-gray-500">
+                            <td colspan="4" class="text-center py-6 text-gray-500">
                                 No assignments found.
                             </td>
                         </tr>
@@ -82,16 +82,12 @@
                                 <%= a.title %>
                             </td>
 
-                            <!-- Category -->
-                            <td class="px-6 py-4 capitalize">
-                                <%= a.category %>
-                            </td>
-
                             <!-- Status Badge -->
                             <td class="px-6 py-4">
                                 <% let color='bg-gray-500' ; 
                                     if(a.status==='Draft') color='bg-yellow-500';
                                     if(a.status==='Submitted') color='bg-orange-500';
+                                    if(a.status==='HOD Review') color='bg-blue-500';
                                     if(a.status==='Approved') color='bg-green-600';
                                     if(a.status==='Rejected') color='bg-red-600'; 
                                 %>

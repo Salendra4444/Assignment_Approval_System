@@ -37,8 +37,8 @@
                             <span id="inlineErrorText"></span>
                         </div>
 
-                        <!-- Row 1: Title + Category -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Assignment title -->
+                        <div>
 
                             <!-- Title -->
                             <div>
@@ -46,19 +46,6 @@
                                 <input type="text" name="title"
                                     class="w-full p-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
                                     placeholder="Enter assignment title" required>
-                            </div>
-
-                            <!-- Category -->
-                            <div>
-                                <label class="block mb-2 text-sm font-semibold text-gray-700">Category</label>
-                                <select name="category"
-                                    class="w-full p-3 border border-gray-300 rounded-xl text-sm bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition"
-                                    required>
-                                    <option value="">Select Category</option>
-                                    <option value="Assignment">Assignment</option>
-                                    <option value="Thesis">Thesis</option>
-                                    <option value="Report">Report</option>
-                                </select>
                             </div>
 
                         </div>
@@ -82,10 +69,10 @@
                                     class="border border-gray-300 rounded-xl p-3 bg-gray-50 hover:bg-gray-100 transition cursor-pointer">
                                     <input type="file" name="singleUpload"
                                         class="w-full text-sm text-gray-700 focus:outline-none"
-                                        accept=".pdf,.doc,.docx,.ppt,.pptx,.zip" required>
+                                        accept=".pdf,application/pdf" required>
                                 </div>
 
-                                <p class="text-xs text-gray-500 mt-1">Allowed: PDF only</p>
+                                <p class="text-xs text-gray-500 mt-1">PDF files only, up to 10 MB</p>
                             </div>
 
                         </div>
@@ -93,7 +80,7 @@
                         <!-- Submit Button -->
                         <button type="submit"
                             class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3 rounded-xl text-sm transition-all shadow-md hover:shadow-lg">
-                            Submit Assignment
+                            Upload and Submit Assignment
                         </button>
 
                     </form>

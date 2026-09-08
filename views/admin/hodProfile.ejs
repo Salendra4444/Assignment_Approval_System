@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOD Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <main class="max-w-xl mx-auto p-8">
+        <a href="/hodDashboard" class="text-sm text-slate-600 hover:text-slate-900">Back to dashboard</a>
+        <h1 class="text-3xl font-semibold text-slate-800 mt-4">HOD Profile</h1>
+
+        <% if (message) { %><p class="mt-4 rounded bg-green-100 p-3 text-green-800"><%= message %></p><% } %>
+        <% if (error) { %><p class="mt-4 rounded bg-red-100 p-3 text-red-800"><%= error %></p><% } %>
+
+        <section class="bg-white rounded-xl shadow p-6 mt-6">
+            <dl class="space-y-4">
+                <div><dt class="text-sm text-slate-500">Name</dt><dd class="font-medium"><%= hod.name || 'Head of Department' %></dd></div>
+                <div><dt class="text-sm text-slate-500">Email</dt><dd class="font-medium"><%= hod.email %></dd></div>
+                <div><dt class="text-sm text-slate-500">Department</dt><dd class="font-medium"><%= hod.departement || 'Not assigned' %></dd></div>
+            </dl>
+        </section>
+
+        <% if (hod._id) { %>
+        <section class="bg-white rounded-xl shadow p-6 mt-6">
+            <h2 class="text-xl font-semibold">Change password</h2>
+            <form action="/hod/profile/password" method="POST" class="space-y-3 mt-4">
+                <input type="password" name="newPassword" minlength="6" placeholder="New password" required class="w-full rounded border p-3">
+                <input type="password" name="confirmPassword" minlength="6" placeholder="Confirm new password" required class="w-full rounded border p-3">
+                <button class="rounded bg-slate-800 px-4 py-3 text-white hover:bg-slate-900">Update password</button>
+            </form>
+        </section>
+        <% } %>
+    </main>
+</body>
+</html>

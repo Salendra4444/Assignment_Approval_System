@@ -82,10 +82,10 @@
 
                                     <div>
                                         <p class="text-gray-900 font-medium">
-                                            <%= a.studentName %> - <%= a.title %>
+                                            <%= a.student ? a.student.name : 'Student' %> - <%= a.title %>
                                         </p>
                                         <p class="text-gray-500 text-sm">
-                                            Submitted: <%= a.submittedOn %> • <%= a.daysPending %> days pending
+                                            <%= a.student ? a.student.email : '' %> • Submitted: <%= a.submittedAt ? new Date(a.submittedAt).toLocaleDateString() : '-' %>
                                         </p>
                                     </div>
 

@@ -1,8 +1,8 @@
 const AssignmentModel = require("../schema/assignment");
 
-async function getAssignmentStats(professor) {
+async function getAssignmentStats(studentIds) {
   const stats = await AssignmentModel.aggregate([
-    { $match: { currentReviewer: professor } },
+    { $match: { studentId: { $in: studentIds } } },
 
     {
       $facet: {
