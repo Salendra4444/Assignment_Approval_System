@@ -165,9 +165,12 @@ JWT_SECRET=your_jwt_secret
 CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+SEED_DEMO_DATA=false
 ```
 
 Replace the values with your own credentials.
+
+For a fresh demo deployment, temporarily set `SEED_DEMO_DATA=true` and redeploy once. This creates the sample students, professors, and HOD accounts with hashed passwords. Set it back to `false` after the users have been created.
 
 ### 5. Start the application
 

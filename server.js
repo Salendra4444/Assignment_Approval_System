@@ -13,9 +13,11 @@ const DBconnect = require('./model/schema/DbConnect');
 
 DBconnect();
 
-// dataSeeding.departmentSeeding()
-// dataSeeding.Userseeding()
-// dataSeeding.assignmentSeeding()
+if (process.env.SEED_DEMO_DATA === 'true') {
+  dataSeeding.Userseeding()
+    .then(() => console.log('Demo users seeded'))
+    .catch(err => console.error('Demo user seeding failed:', err));
+}
 
 const app = express();
 const port = process.env.PORT || 3000;

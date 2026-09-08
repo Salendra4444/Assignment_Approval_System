@@ -2,6 +2,7 @@ const express = require('express');
 const userModel = require('../model/schema/Registeration');
 const departmentModel = require("../model/schema/Department")
 const AssignmentModel = require('../model/schema/assignment')
+const bcrypt = require('bcrypt');
 const router = express.Router();
 
 
@@ -69,8 +70,15 @@ const users = [
 
 
 const Userseeding = async () => {
-  await userModel.insertMany(users)
-  console.log("User data seeding ..... ")
+  for (const user of users) {
+    const password = await bcrypt.hash(user.password, 10);
+    await userModel.updateOne(
+      { email: user.email },
+      { $setOnInsert: { ...user, password } },
+      { upsert: true }
+    );
+  }
+  console.log("User data seeding ..... ");
 }
 
 

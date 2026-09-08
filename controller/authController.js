@@ -61,12 +61,12 @@ module.exports.loginPost = async (req, res) => {
     return res.render("login", { email,msg1: "", msg2: "Incorrect password!" });
   }
 
-  const token = jwt.sign({ email: user.email }, key, { expiresIn: '1h' });
+  const token = jwt.sign({ email: user.email, role: user.role }, key, { expiresIn: '1h' });
   res.cookie('token', token, { httpOnly: true });
 
   if (user.role === "Student") return res.redirect("/studentDashboard");
   if (user.role === "Professor") return res.redirect("/professorDashboard");
-  if (user.role === "H.O.D") return res.redirect("/hodDashboard");
+  if (user.role === "H.O.D" || user.role === "HOD") return res.redirect("/hodDashboard");
 };
 
 module.exports.signupPost = async (req, res) => {
